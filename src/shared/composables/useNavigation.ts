@@ -1,3 +1,4 @@
+//la api usa ids para las categorías
 import { useRouter } from "vue-router"
 import { useNavStore } from "@/stores";
 
@@ -5,11 +6,11 @@ import { useNavStore } from "@/stores";
 export const useNavigation = () => {
 
   const router = useRouter();
-  const navStore = useNavStore(); // setCategory,    setCurrentSection,    toggleNavCat,
+  const navStore = useNavStore(); // setCategory,    setCurrentSection,
 
-  const handleCategory = (category: string) => {
-    navStore.setCategory(category);
-    router.push(`/products/${category}`);
+  const handleCategory = (categoryId: number) => {
+    navStore.setCategory(categoryId);
+    router.push(`/products/${categoryId}`);
   }
 
   const handleSection = (section: string) => {

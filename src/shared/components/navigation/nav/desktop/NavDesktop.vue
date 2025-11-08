@@ -5,30 +5,22 @@
     </div>
 
     <div class="nav__section nav__section--right">
-      <IconButton
-        class="icon-btn-nav-desktop"
-        aria-label="Carrito"
-        @click="handleSectionDesktop('cart')"
-      >
+      <IconButton class="icon-btn-nav-desktop" aria-label="Carrito" @click="handleSection('cart')">
         <ShoppingBagIcon class="nav-icon" />
       </IconButton>
     </div>
   </nav>
-  <NavDesktopCat @select="handleCategory" />
+  <NavDesktopCat />
 </template>
 
 <script setup lang="ts">
-import { HeartIcon, ShoppingBagIcon } from '@heroicons/vue/24/outline'
+import { ShoppingBagIcon } from '@heroicons/vue/24/outline'
 import { IconButton, LogoButton } from '@/shared/components/ui/actions/buttons'
 //import { SearchBar } from '@/domain/products/search/components'
 import NavDesktopCat from './NavDesktopCat.vue'
 import { useNavigation } from '@/shared/composables/useNavigation'
 
-const { handleCategory, handleSection } = useNavigation()
-
-function handleSectionDesktop(section: string) {
-  handleSection(section)
-}
+const { handleSection } = useNavigation()
 </script>
 
 <style scoped>

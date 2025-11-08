@@ -4,8 +4,9 @@ import type { AxiosResponse } from "axios";
 
 export const productsApi = {
 
-  getAll: (): Promise<AxiosResponse<ProductInterface[]>> => {
-    return axiosAdapter.get("/products");
+  getAll: (categoryId?: number): Promise<AxiosResponse<ProductInterface[]>> => {
+    const url = categoryId ? `/products?categoryId=${categoryId}` : '/products';
+    return axiosAdapter.get(url);
   },
 
   getById: (id: number): Promise<AxiosResponse<ProductInterface>> => {

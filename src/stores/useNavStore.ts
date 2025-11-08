@@ -8,12 +8,12 @@ import { ref } from 'vue'
 
 export const useNavStore = defineStore('nav', () => {
 
-  const selectedCategory = ref<string>('Clothes')
+  const selectedCategory = ref<number>(0)
   const currentSection = ref<string>('')
   const isNavCatOpen = ref<boolean>(false)
 
-  const setCategory = (category: string) => {
-    selectedCategory.value = category
+  const setCategory = (categoryId: number) => {
+    selectedCategory.value = categoryId
   }
 
   const setCurrentSection = (section: string) => {

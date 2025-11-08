@@ -4,11 +4,11 @@
       <div class="nav__mobile-group nav__mobile-group--categories">
         <BaseAccountButton
           v-for="cat in categories"
-          :key="cat.key"
+          :key="cat.id"
           class="base-btn-nav-movil"
-          @click="handleCategoryMobile(cat.key)"
+          @click="handleCategoryMobile(cat.id)"
         >
-          {{ cat.label }}
+          {{ getCategoryLabel(cat.name.toLowerCase()) }}
         </BaseAccountButton>
       </div>
       <div class="nav__mobile-group nav__mobile-group--actions">
@@ -24,29 +24,29 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
+import { defineProps } from 'vue'
 import Drawer from '@/shared/components/ui/display/Drawer.vue'
 import { BaseAccountButton } from '@/shared/components/ui/actions/buttons'
 import { useNavigation } from '@/shared/composables'
-import { categories } from '@/shared/helpers/categories'
+import { useCategories } from '@/domain/products/products/composables/useCategories'
+import { getCategoryLabel } from '@/shared/helpers'
 
 const props = defineProps({
   isOpen: Boolean,
 })
 
-const emit = defineEmits(['update:isOpen', 'selectCategory', 'selectSection'])
+const emit = defineEmits(['update:isOpen'])
 
 const { handleCategory, handleSection } = useNavigation()
+const { categories } = useCategories()
 
-function handleCategoryMobile(category: string) {
-  handleCategory(category)
-  emit('selectCategory', category)
+function handleCategoryMobile(categoryId: number) {
+  handleCategory(categoryId)
   emit('update:isOpen', false)
 }
 
 function handleSectionMobile(section: string) {
   handleSection(section)
-  emit('selectSection', section)
   emit('update:isOpen', false)
 }
 

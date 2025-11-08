@@ -27,12 +27,7 @@
     </div>
     -->
 
-    <NavMobileCat
-      :isOpen="isOpen"
-      @update:isOpen="isOpen = $event"
-      @selectCategory="handleCategoryMobile"
-      @selectSection="handleSectionMobile"
-    />
+    <NavMobileCat :isOpen="isOpen" @update:isOpen="isOpen = $event" />
   </div>
 </template>
 
@@ -48,8 +43,8 @@ import NavMobileCat from './NavMobileCat.vue'
 const isOpen = ref(false)
 const { handleCategory, handleSection } = useNavigation()
 
-function handleCategoryMobile(category: string) {
-  handleCategory(category)
+function handleCategoryMobile(categoryId: number) {
+  handleCategory(categoryId)
   isOpen.value = false
 }
 

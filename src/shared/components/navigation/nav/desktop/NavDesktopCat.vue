@@ -2,12 +2,12 @@
   <div class="nav-desktop-cat">
     <BaseAccountButton
       v-for="cat in categories"
-      :key="cat.key"
+      :key="cat.id"
       class="base-btn-nav-desktop-cat"
-      :class="{ active: cat.key === selectedCategory }"
-      @click="selectCategory(cat.key)"
+      :class="{ active: cat.id === selectedCategory }"
+      @click="selectCategory(cat.id)"
     >
-      {{ cat.label }}
+      {{ getCategoryLabel(cat.name.toLowerCase()) }}
     </BaseAccountButton>
   </div>
 </template>
@@ -15,18 +15,15 @@
 <script setup lang="ts">
 import { BaseAccountButton } from '@/shared/components/ui/actions/buttons'
 import { useNavigation } from '@/shared/composables/useNavigation'
-import { categories } from '@/shared/helpers/categories'
+import { useCategories } from '@/domain/products/products/composables/useCategories'
+import { getCategoryLabel } from '@/shared/helpers'
 
-const emit = defineEmits(['select'])
+const { categories } = useCategories()
 const { handleCategory, navStore } = useNavigation()
 const selectedCategory = navStore.selectedCategory
 
-//select category and emit event
-function selectCategory(key: string) {
-  handleCategory(key)
-  // El siguiente emit es opcional: solo es necesario si el padre necesita reaccionar al cambio de categoría.
-  // Si no se usa en el padre, se puede eliminar para simplificar el componente.
-  emit('select', key)
+function selectCategory(categoryId: number) {
+  handleCategory(categoryId)
 }
 </script>
 

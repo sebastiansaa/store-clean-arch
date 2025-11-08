@@ -1,9 +1,9 @@
-import { useRouter } from 'vue-router'
-import type { ProductInterface } from '../interfaces'
-
 /**
  * Encapsula la lógica de router y navegación a diferentes vistas de productos
  * Navega por categorias y productos*/
+
+import type { ProductInterface } from '../interfaces'
+import { useRouter } from 'vue-router'
 
 export function useProductNavigation() {
   const router = useRouter()

@@ -1,6 +1,6 @@
 export interface CategoryInterface {
   id: number;
-  name: string;  //nos dice la categoria
+  name: string;
   slug: string;
   image: string;
   createdAt: string;

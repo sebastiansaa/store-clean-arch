@@ -16,12 +16,12 @@ const router = createRouter({
       component: AboutView,
     },
     {
-      path: '/products/:category',
+      path: '/products/:categoryId',
       name: 'productsByCategory',
       component: () => import('../domain/products/products/views/ProductsView.vue'),
     },
     {
-      path: '/products/:category/:id',
+      path: '/products/:categoryId/:id',
       name: 'productDetail',
       component: () => import('../domain/products/products/views/ProductDetailView.vue'),
       props: true

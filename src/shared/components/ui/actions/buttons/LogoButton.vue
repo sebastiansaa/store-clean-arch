@@ -1,13 +1,12 @@
 <template>
-  <button @click="goHome" class="nav__logo-btn">
+  <button @click="handleSection('home')" class="nav__logo-btn">
     <img src="@/assets/logo.svg" alt="Logo" class="nav__logo" />
   </button>
 </template>
 
 <script setup lang="ts">
-import { useNavLogic } from '../../../../composables'
-
-const { goHome } = useNavLogic()
+import { useNavigation } from '../../../../composables'
+const { handleSection } = useNavigation()
 </script>
 
 <style scoped>
