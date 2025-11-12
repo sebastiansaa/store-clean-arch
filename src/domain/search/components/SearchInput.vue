@@ -8,12 +8,15 @@
       ref="inputRef"
       :value="modelValue"
       @input="onInput"
+      @compositionstart="onCompositionStart"
+      @compositionend="onCompositionEnd"
       type="text"
       class="search-input"
       :placeholder="placeholder"
       @keyup.enter="onSubmit"
       @focus="onFocus"
       @blur="onBlur"
+      v-bind="$attrs"
     />
 
     <button
@@ -37,7 +40,15 @@ const props = defineProps({
   placeholder: { type: String, default: 'Buscar productos...' },
 })
 
-const emit = defineEmits(['update:modelValue', 'submit', 'clear', 'focus', 'blur'])
+const emit = defineEmits([
+  'update:modelValue',
+  'submit',
+  'clear',
+  'focus',
+  'blur',
+  'compositionstart',
+  'compositionend',
+])
 
 const inputRef = ref<HTMLInputElement | null>(null)
 
@@ -63,6 +74,14 @@ function onFocus() {
 
 function onBlur() {
   emit('blur')
+}
+
+function onCompositionStart() {
+  emit('compositionstart')
+}
+
+function onCompositionEnd() {
+  emit('compositionend')
 }
 
 defineExpose({ focus: () => inputRef.value?.focus() })

@@ -1,63 +1,37 @@
 <template>
-  <div class="search-bar">
+  <div class="search-bar" :ref="(el) => (searchBar.containerRef.value = el as HTMLElement | null)">
     <SearchInput
-      v-model="searchTerm"
+      v-model="searchBar.localQuery.value"
       placeholder="Buscar productos..."
-      @submit="handleSearch"
-      @focus="onFocus"
-      @blur="hideDropdown"
-      @clear="clearSearch"
+      @submit="searchBar.handleSubmit"
+      @focus="searchBar.handleFocus"
+      @blur="searchBar.handleBlur"
+      @clear="searchBar.handleClear"
+      @compositionstart="searchBar.onCompositionStart"
+      @compositionend="searchBar.onCompositionEnd"
+      :aria-activedescendant="searchBar.activeDescendant.value"
     />
 
     <SearchDropdown
-      :visible="showDropdown"
-      :results="results || []"
-      :isLoading="isLoading"
-      @select="selectProduct"
+      :visible="searchBar.showDropdown.value"
+      :results="searchBar.results.value || []"
+      :isLoading="searchBar.isLoading.value"
+      :isError="searchBar.isError.value"
+      :error="searchBar.error.value"
+      :retry="searchBar.retry"
+      @select="searchBar.handleProductSelection"
+      @hover="searchBar.handleHover"
+      :activeIndex="searchBar.activeIndex.value"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useSearch } from '../componsables/useSearch'
-import { useProductNavigation } from '../../products/products/composables'
-import { ref, computed, unref } from 'vue'
-import type { ProductInterface } from '../../products/products/interfaces'
 import SearchDropdown from './SearchDropdown.vue'
 import SearchInput from './SearchInput.vue'
+import { useSearchBar } from '../componsables/useSearchBar'
 
-const {
-  searchTerm: searchTermRef,
-  setSearchTerm,
-  clearSearch,
-  results,
-  isLoading,
-} = useSearch({ debounceMs: 200 })
-const { navigateToProduct } = useProductNavigation()
-
-// Computed writable para que v-model funcione correctamente con el store
-const searchTerm = computed({
-  get: () => unref(searchTermRef),
-  set: (val) => setSearchTerm(val),
-})
-
-const showDropdown = ref(false)
-
-const onFocus = () => {
-  showDropdown.value = true
-}
-
-const handleSearch = () => {}
-
-const selectProduct = (product: ProductInterface) => {
-  navigateToProduct(product)
-  showDropdown.value = false
-  clearSearch()
-}
-
-const hideDropdown = () => {
-  showDropdown.value = false
-}
+const searchBar = useSearchBar()
 </script>
 
 <style scoped>

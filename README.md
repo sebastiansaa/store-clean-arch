@@ -65,6 +65,6 @@ public/
 
 Todo el proyecto está desarrollado con TypeScript, incluyendo componentes, stores y composables. Se recomienda usar un editor con soporte para TS (como VS Code) para aprovechar el tipado y la autocompletación.
 
----
+## Para decisiones de diseño y arquitectura consulta `DECISIONS.md`.
 
 > Proyecto para práctica de arquitectura limpia, navegación y tipado estricto en Vue 3.

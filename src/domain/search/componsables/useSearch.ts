@@ -1,13 +1,19 @@
 // store para busqueda global de productos por título
+// con debounce y min de char para realizar la búsqueda
 
 import { useSearchStore } from "../stores/searchStore"
 import { useQuery, useQueryClient } from "@tanstack/vue-query";
-import { computed, ref, unref, watch } from "vue";
+import { computed, ref, unref, watch, type Ref } from "vue";
 import { getProducts } from "../../products/products/services/getProducts";
 import type { ProductInterface } from "../../products/products/interfaces";
+import { SEARCH_CONFIG } from "../config/search.config";
 
-//"{ debounceMs }"  configura el retardo para debounce. (tiempo de espera antes de lanzar búsqueda)
-export const useSearch = ({ debounceMs = 200 } = {}) => {
+//"{ debounceMs }" => el retardo antes de lanzar búsqueda
+// minChars puede ser un number o un Ref<number> para permitir reactividad desde fuera
+export const useSearch = ({
+  debounceMs = SEARCH_CONFIG.DEBOUNCE_MS as number,
+  minChars = SEARCH_CONFIG.MIN_CHARS as number | Ref<number>
+} = {}) => {
 
   const searchStore = useSearchStore() // Estado global
   const queryClient = useQueryClient()
@@ -26,16 +32,23 @@ export const useSearch = ({ debounceMs = 200 } = {}) => {
   })
 
   // Usa la misma queryKey que el prefetch en App.vue
-  const { data: allProducts } = useQuery({
+  const {
+    data: allProducts,
+    isLoading: queryLoading,
+    isError: queryIsError,
+    error: queryError,
+    refetch: queryRefetch,
+  } = useQuery({
     queryKey: ['products'],
     queryFn: () => getProducts(),
-    staleTime: 1000 * 60 * 30, // 30 minutos
+    staleTime: SEARCH_CONFIG.QUERY_STALE_TIME,
   })
 
   // Filtra localmente sin hacer nuevas requests. CaseInsensitive
   const results = computed(() => {
     const term = debouncedTerm.value?.toLowerCase().trim()
-    if (!term || term.length < 2 || !allProducts.value) {
+    // Si no hay término, o el término no llega al mínimo de caracteres, o no hay productos, devolver vacío
+    if (!term || term.length < unref(minChars) || !allProducts.value) {
       return []
     }
     return allProducts.value.filter((product: ProductInterface) =>
@@ -43,13 +56,23 @@ export const useSearch = ({ debounceMs = 200 } = {}) => {
     )
   })
 
-  const isLoading = computed(() => !allProducts.value && debouncedTerm.value.length > 1)
+  // isLoading defensivo: usa optional chaining y el parámetro minChars
+  // isLoading: combinar el estado de la query con el umbral de minChars
+  const isLoading = computed(() => (queryLoading.value ?? false) && (debouncedTerm.value?.length ?? 0) > unref(minChars))
+
+  // Exponer estado de error y una función de reintento (refetch)
+  const isError = computed(() => !!queryIsError.value)
+  const error = queryError
+  const retry = queryRefetch
 
   return {
     results,
     isLoading,
+    isError,
+    error,
+    retry,
     searchTerm: searchStore.searchTerm,
     setSearchTerm: searchStore.setSearchTerm,
-    clearSearch: searchStore.clearSearchTerm
+    clearSearch: searchStore.clearSearch
   }
 }
