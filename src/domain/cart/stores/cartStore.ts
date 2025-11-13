@@ -1,6 +1,6 @@
 import type { ProductInterface } from "@/domain/products/products/interfaces";
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 const STORAGE_KEY = 'myapp_cart_v1'// clave para guardar datos en el localStorage
 
@@ -8,6 +8,11 @@ export const cartStore = defineStore('cartStore', () => {
 
   const cartItems = ref<{ product: ProductInterface; quantity: number }[]>([]);
   const totalPrice = ref<number>(0);
+
+  // Contador total de items en el carrito
+  const count = computed(() => cartItems.value.reduce((s, it) => s + (it.quantity || 0), 0));
+
+
 
   //cargar el local storage
   const LoadFromStorage = () => {
@@ -43,7 +48,6 @@ export const cartStore = defineStore('cartStore', () => {
   }
 
   const addToCart = (product: ProductInterface) => {
-
     const existingItem = cartItems.value.find(item => item.product.id === product.id)
     if (existingItem) {
       existingItem.quantity += 1;
@@ -87,6 +91,7 @@ export const cartStore = defineStore('cartStore', () => {
   return {
     cartItems,
     totalPrice,
+    count,
     addToCart,
     removeFromCart,
     updateQuantity,
