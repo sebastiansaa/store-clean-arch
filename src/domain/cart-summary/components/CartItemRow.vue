@@ -14,13 +14,10 @@
 
 <script setup lang="ts">
 import { defineProps } from 'vue'
+import type { CartItem } from '@/domain/cart/interface'
+import { formatPrice } from '@/shared/helpers/formatPrice'
 
-const props = defineProps<{ item: any }>()
-
-function formatPrice(p: any) {
-  const n = Number(p || 0)
-  return `${n} USD`
-}
+const props = defineProps<{ item: CartItem }>()
 </script>
 
 <style scoped>

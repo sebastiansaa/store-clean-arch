@@ -31,13 +31,13 @@ import { IconButton, LogoButton } from '@/shared/components/ui/actions/buttons'
 import SearchBar from '@/domain/search/components/SearchBar.vue'
 import NavDesktopCat from './NavDesktopCat.vue'
 import { cartStore } from '@/domain/cart/stores/cartStore'
-import { useMiniCart } from '@/domain/cart/composables'
+import { useMiniCartStore } from '@/domain/cart/stores/useMiniCartStore'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const cart = cartStore()
 const count = computed(() => cart.count)
-const { openExpanded } = useMiniCart()
+const { openExpanded } = useMiniCartStore()
 const router = useRouter()
 
 const handleCartClick = () => {

@@ -1,71 +1,80 @@
 <template>
   <div class="checkout-form">
     <h2>Datos del comprador</h2>
-    <form @submit.prevent="onSubmit">
+    <form @submit.prevent="noop">
       <div class="field">
         <label>Nombre completo</label>
-        <input v-model="form.fullName" required />
-      </div>
-      <div class="field">
-        <label>Dirección de envío</label>
-        <input v-model="form.address" required />
-      </div>
-      <div class="field">
-        <label>Teléfono</label>
-        <input v-model="form.phone" inputmode="tel" required />
-      </div>
-      <div class="field">
-        <label>Email</label>
-        <input v-model="form.email" type="email" required />
+        <input v-model="fullName" @blur="fullNameBlur" />
+        <div class="error">{{ fullNameError || formErrors.fullName }}</div>
       </div>
 
-      <h3>Datos de tarjeta</h3>
       <div class="field">
-        <label>Número de tarjeta</label>
-        <input
-          v-model="form.cardNumber"
-          inputmode="numeric"
-          maxlength="19"
-          placeholder="4444 4444 4444 4444"
-          required
-        />
+        <label>Dirección de envío</label>
+        <input v-model="address" @blur="addressBlur" />
+        <div class="error">{{ addressError || formErrors.address }}</div>
       </div>
-      <div class="row">
-        <div class="field small">
-          <label>Expiración</label>
-          <input v-model="form.expiry" placeholder="MM/AA" required />
-        </div>
-        <div class="field small">
-          <label>CVV</label>
-          <input v-model="form.cvv" inputmode="numeric" maxlength="4" required />
-        </div>
+
+      <div class="field">
+        <label>Teléfono</label>
+        <input v-model="phone" inputmode="tel" @blur="phoneBlur" />
+        <div class="error">{{ phoneError || formErrors.phone }}</div>
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input v-model="email" type="email" @blur="emailBlur" />
+        <div class="error">{{ emailError || formErrors.email }}</div>
       </div>
 
       <div class="actions">
         <button type="button" class="btn secondary" @click="$emit('cancel')">Volver</button>
-        <button type="submit" class="btn primary">Pagar ahora</button>
       </div>
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { ref, watch } from 'vue'
+import { useCheckoutForm } from '../composables/useCheckoutForm'
+
 const emit = defineEmits(['confirm', 'cancel'])
 
-const form = reactive({
-  fullName: '',
-  address: '',
-  phone: '',
-  email: '',
-  cardNumber: '',
-  expiry: '',
-  cvv: '',
-})
+const {
+  fullName,
+  fullNameError,
+  fullNameBlur,
+  address,
+  addressError,
+  addressBlur,
+  phone,
+  phoneError,
+  phoneBlur,
+  email,
+  emailError,
+  emailBlur,
+  values,
+  formErrors,
+  onSubmit,
+} = useCheckoutForm()
 
-function onSubmit() {
-  emit('confirm', { ...form })
-}
+const noop = () => {}
+
+// Auto-confirmación: cuando el formulario es válido, emitir 'confirm' automáticamente.
+const autoConfirmed = ref(false)
+
+watch(
+  values,
+  async () => {
+    if (autoConfirmed.value) return
+    // Intentar validar
+    const result = await onSubmit()
+    if (result) {
+      autoConfirmed.value = true
+      emit('confirm', result)
+    }
+  },
+  { deep: true },
+)
 </script>
 
 <style scoped>
@@ -74,6 +83,12 @@ function onSubmit() {
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #333;
 }
 .field {
   margin-bottom: 0.75rem;

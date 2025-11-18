@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import SearchDropdown from './SearchDropdown.vue'
 import SearchInput from './SearchInput.vue'
-import { useSearchBar } from '../componsables/useSearchBar'
+import { useSearchBar } from '../composables/useSearchBar'
 
 const searchBar = useSearchBar()
 </script>

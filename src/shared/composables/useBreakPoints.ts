@@ -1,42 +1,34 @@
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+/**
+ * Composable para manejar breakpoints responsive: mobile y desktop/PC.
+ * Refactorizado para usar VueUse's useBreakpoints + useWindowSize.
+ */
+import { computed } from 'vue'
+import { useBreakpoints as vueUseBreakpoints, breakpointsTailwind, useWindowSize } from '@vueuse/core'
 import { SHARED_CONFIG } from '../config/shared.config'
-//Composable para manejar breakpoints responsive: mobile y desktop/PC
 
 export function useBreakPoints() {
-  // null indica que aún no se midió el ancho
+  // Usar useWindowSize de VueUse para obtener dimensiones de ventana reactivas
+  const { width } = useWindowSize()
 
-  const windowWidth = ref<number | null>(null)
-
-  function updateDimensions() {
-    windowWidth.value = window.innerWidth
-  }
-
-  onMounted(() => {
-    updateDimensions()
-    window.addEventListener('resize', updateDimensions)
+  // Configurar breakpoints personalizados basados en SHARED_CONFIG
+  const breakpoints = vueUseBreakpoints({
+    mobile: SHARED_CONFIG.breakpoints.mobile,
+    desktop: SHARED_CONFIG.breakpoints.desktop,
   })
 
-  onUnmounted(() => {
-    window.removeEventListener('resize', updateDimensions)
-  })
+  // windowWidth ahora es reactivo y nunca null (VueUse es SSR-safe)
+  const windowWidth = computed(() => width.value)
 
-  //  se midió el ancho en el cliente
-  const isReady = computed(() => windowWidth.value !== null)
+  // isReady siempre es true con VueUse (maneja SSR internamente)
+  const isReady = computed(() => true)
 
-  const isMobile = computed(() => {
-    //`isMobile` / `isDesktop` son null-safe para evitar hydration mismatches en SSR
-    if (windowWidth.value === null) return false
-    return windowWidth.value <= SHARED_CONFIG.breakpoints.mobile
-  })
-
-  const isDesktop = computed(() => {
-    if (windowWidth.value === null) return false
-    return windowWidth.value >= SHARED_CONFIG.breakpoints.desktop
-  })
+  // Usar los helpers de VueUse para determinar breakpoints
+  const isMobile = breakpoints.smallerOrEqual('mobile')
+  const isDesktop = breakpoints.greaterOrEqual('desktop')
 
   return {
-    windowWidth, //- `windowWidth` arranca como `null` (no medido)
-    isReady, //`isReady` indica que la medición ya ocurrió (cliente montado)
+    windowWidth,
+    isReady,
     isMobile,
     isDesktop,
   }

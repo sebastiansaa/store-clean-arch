@@ -1,7 +1,8 @@
-// Navega entre productos y categorías
+// Navega entre productos y categorías. Evita que el producto anterior se quede "pegado" al navegar hacia otro.
 
 import type { ProductInterface } from '../interfaces'
 import { useRouter } from 'vue-router'
+import { useProductStore } from '../stores'
 
 export function useProductNavigation() {
   const router = useRouter()
@@ -19,8 +20,11 @@ export function useProductNavigation() {
     if (!categoryId) {
       throw new Error('navigateToProduct: product.category.id is missing')
     }
-
     try {
+      const productStore = useProductStore()
+      productStore.selectProductById(product.id)
+      //Select explicita del product. Evita que quede "pegado" el anterior.
+
       return await router.push({
         name: 'productDetail',
         params: {
@@ -40,7 +44,6 @@ export function useProductNavigation() {
     if (!categoryId || !productId) {
       throw new Error('navigateToProductById: categoryId and productId are required')
     }
-
     try {
       return await router.push({
         name: 'productDetail',
@@ -52,6 +55,7 @@ export function useProductNavigation() {
     }
   }
 
+  /** Navega a una categoría usando su slug. Útil para listar productos por categoría. */
   const navigateToCategory = async (categorySlug: string) => {
     if (!categorySlug) {
       throw new Error('navigateToCategory: categorySlug is required')

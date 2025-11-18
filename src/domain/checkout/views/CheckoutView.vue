@@ -1,32 +1,39 @@
 <template>
   <div class="checkout-page">
     <section class="checkout-body">
-      <OrderSummary :items="items" :total="total" @remove="handleRemove" />
+      <CheckoutSummary :items="items" :total="total" @remove="handleRemove" />
 
       <div class="right-col">
-        <CheckoutForm @confirm="handleConfirm" @cancel="handleCancel" />
-        <div class="processing" v-if="processing">Procesando pago...</div>
-        <div class="success" v-if="success">Pago realizado. Redirigiendo...</div>
+        <CheckoutSidebar :total="total" @confirm="handleConfirm" @cancel="handleCancel" />
       </div>
+      <div class="error" v-if="error">{{ error?.message ?? String(error) }}</div>
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { cartStore } from '@/domain/cart/stores/cartStore'
-import OrderSummary from '@/domain/payment/components/OrderSummary.vue'
-import CheckoutForm from '../components/CheckoutForm.vue'
+import CheckoutSummary from '../components/CheckoutSummary.vue'
+import CheckoutSidebar from '../components/CheckoutSidebar.vue'
+import { useCheckout } from '../composables/useCheckout'
+import { useCheckoutStore } from '../stores/checkoutStore'
 
 const router = useRouter()
 const cart = cartStore()
+const checkoutStore = useCheckoutStore()
 
 const items = computed(() => cart.cartItems)
 const total = computed(() => cart.totalPrice)
 
-const processing = ref(false)
-const success = ref(false)
+const { processing, success, performCheckout, error } = useCheckout()
+
+// Resetear el estado del checkout al entrar a la vista
+// Esto evita que mensajes de éxito persistan al volver desde otras páginas
+onMounted(() => {
+  checkoutStore.resetCheckout()
+})
 
 function handleRemove(id: number) {
   if (typeof cart.removeFromCart === 'function') cart.removeFromCart(id)
@@ -37,21 +44,7 @@ function handleCancel() {
 }
 
 function handleConfirm(formData: any) {
-  // Aquí integrarías la pasarela; ahora simulamos
-  processing.value = true
-  setTimeout(() => {
-    if (typeof cart.clearCart === 'function') {
-      ;(cart as any).clearCart()
-    } else {
-      items.value.forEach((it: any) => cart.removeFromCart(it.product.id))
-    }
-    processing.value = false
-    success.value = true
-    // después de pago simulado, ir a orders (podemos pasar orderId simulado)
-    setTimeout(() => {
-      router.push({ path: '/orders' })
-    }, 1000)
-  }, 1200)
+  performCheckout(formData)
 }
 </script>
 

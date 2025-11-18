@@ -17,9 +17,11 @@
   },
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
+    "@stripe/stripe-js": "^8.4.0",
     "@tanstack/vue-query": "^5.90.7",
     "@vee-validate/rules": "^4.15.1",
     "@vee-validate/zod": "^4.15.1",
+    "@vueuse/core": "^14.0.0",
     "axios": "^1.13.2",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",

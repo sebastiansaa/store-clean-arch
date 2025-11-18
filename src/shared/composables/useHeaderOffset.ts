@@ -1,17 +1,22 @@
-import { onMounted, onBeforeUnmount } from 'vue'
-
-/** calcula dinámicamente la altura del header CSS personalizada (--header-offset).
- * Utiliza ResizeObserver y resize events para mantener actualizada esta medida,
-  NO ESTA SIENDO USADO POR AHORA, PERO ES UN BUEN EJEMPLO DE CALCULAR Y MODIFICAR CSS CON JS */
+/**
+ * Calcula dinámicamente la altura del header y actualiza la CSS custom property (--header-offset).
+ * Refactorizado para usar VueUse's useElementBounding + useDebounceFn.
+ * NO ESTA SIENDO USADO POR AHORA, PERO ES UN BUEN EJEMPLO DE CALCULAR Y MODIFICAR CSS CON JS
+ */
+import { ref, watch, onMounted } from 'vue'
+import { useElementBounding, useDebounceFn } from '@vueuse/core'
 
 export function useHeaderOffset(options?: { selector?: string; debounceMs?: number }) {
   const selector = options?.selector ?? 'header'
   const debounceMs = options?.debounceMs ?? 100
-  let ro: ResizeObserver | null = null
-  let rafId = 0
-  let timeoutId: any = null
 
-  function setVar(px: number) {
+  const headerEl = ref<HTMLElement | null>(null)
+
+  // Usar useElementBounding de VueUse para obtener dimensiones reactivas
+  const { height } = useElementBounding(headerEl)
+
+  // Función para actualizar la variable CSS
+  const setVar = (px: number) => {
     try {
       document.documentElement.style.setProperty('--header-offset', `${px}px`)
     } catch (e) {
@@ -19,56 +24,28 @@ export function useHeaderOffset(options?: { selector?: string; debounceMs?: numb
     }
   }
 
-  function measureAndSet() {
-    if (typeof window === 'undefined') return
-    const el = document.querySelector(selector) as HTMLElement | null
-    if (!el) {
-      // valor por defecto
-      setVar(62)
-      return
-    }
+  // Debounce de la actualización usando useDebounceFn de VueUse
+  const debouncedSetVar = useDebounceFn((h: number) => {
+    setVar(Math.ceil(h || 62)) // valor por defecto si height es 0
+  }, debounceMs)
 
-    const height = Math.ceil(el.getBoundingClientRect().height)
-    setVar(height)
-  }
-
-  function debouncedMeasure() {
-    clearTimeout(timeoutId)
-    timeoutId = setTimeout(() => {
-      // usar requestAnimationFrame para agrupar lecturas/escrituras
-      cancelAnimationFrame(rafId)
-      rafId = requestAnimationFrame(() => {
-        measureAndSet()
-      })
-    }, debounceMs)
-  }
+  // Watch height y actualizar CSS variable
+  watch(height, (h) => {
+    debouncedSetVar(h)
+  }, { immediate: true })
 
   onMounted(() => {
-    // establecer valor inicial
-    measureAndSet()
+    // Obtener el elemento header del DOM
+    headerEl.value = document.querySelector(selector) as HTMLElement | null
 
-    if (typeof window === 'undefined') return
-
-    // ResizeObserver sobre el elemento header
-    const el = document.querySelector(selector)
-    if (el && (window as any).ResizeObserver) {
-      ro = new ResizeObserver(debouncedMeasure)
-      ro.observe(el)
+    // Si no se encuentra el elemento, establecer valor por defecto
+    if (!headerEl.value) {
+      setVar(62)
     }
-
-    // alternativa: evento de redimensionamiento de la ventana
-    window.addEventListener('resize', debouncedMeasure, { passive: true })
-  })
-
-  onBeforeUnmount(() => {
-    if (ro && ro.disconnect) ro.disconnect()
-    window.removeEventListener('resize', debouncedMeasure)
-    clearTimeout(timeoutId)
-    cancelAnimationFrame(rafId)
   })
 
   // Retorna control opcional para recomputar manualmente
   return {
-    recompute: measureAndSet,
+    recompute: () => setVar(height.value),
   }
 }

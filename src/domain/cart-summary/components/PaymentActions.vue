@@ -8,19 +8,12 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
-
 const props = defineProps<{
   disabled?: boolean
   processing?: boolean
   success?: boolean
   productId?: string
 }>()
-
-const disabled = props.disabled ?? false
-const processing = props.processing ?? false
-const success = props.success ?? false
-const productId = props.productId ?? ''
 </script>
 
 <style scoped>

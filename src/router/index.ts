@@ -29,7 +29,7 @@ const router = createRouter({
     {
       path: '/payment',
       name: 'payment',
-      component: () => import('../domain/payment/views/PaymentView.vue'),
+      component: () => import('../domain/cart-summary/views/PaymentView.vue'),
     },
     {
       path: '/checkout',

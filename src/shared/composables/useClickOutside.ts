@@ -1,57 +1,38 @@
-// Detecta clicks/touches fuera de un elemento contenedor y ejecuta una callback
+/**
+ * Detecta clicks/touches fuera de un elemento contenedor y ejecuta una callback.
+ * Refactorizado para usar VueUse's onClickOutside + useEventListener.
+ *
+ * Nota: VueUse's onClickOutside usa 'pointerdown' por defecto, que cubre tanto
+ * clicks de mouse como touch events en dispositivos móviles.
+ */
 import type { Ref } from 'vue'
+import { onClickOutside as vueUseClickOutside, useEventListener } from '@vueuse/core'
 
 export function useClickOutside(
   containerRef: Ref<HTMLElement | null>,
   onOutside: () => void,
   opts: { listenToEscape?: boolean; events?: string[] } = {}
 ) {
-  const events = opts.events || ['pointerdown', 'touchstart']
   const listenToEscape = opts.listenToEscape ?? true
 
-  function handler(e: Event) {
-    const el = containerRef.value
-    if (!el) return
+  // Usar onClickOutside de VueUse para detección de clicks fuera
+  // VueUse maneja automáticamente pointerdown (mouse + touch)
+  const stopClickOutside = vueUseClickOutside(containerRef, onOutside)
 
-    let path: EventTarget[] = []
-    const anyEvent = e as any
-    if (typeof anyEvent.composedPath === 'function') {
-      path = anyEvent.composedPath()
-    } else if (Array.isArray(anyEvent.path)) {
-      path = anyEvent.path
-    } else {
-      let node: Node | null = (e.target as Node) || null
-      while (node) {
-        path.push(node)
-        node = node.parentNode
+  // Manejar Escape key si está habilitado
+  let stopEscape: (() => void) | undefined
+  if (listenToEscape) {
+    stopEscape = useEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onOutside()
       }
-      path.push(document)
-      path.push(window)
-    }
-
-    const target = (e.target as Node) || null
-    const clickedInside = path.includes(el) || (target && el.contains(target))
-    if (!clickedInside) onOutside()
-  }
-
-  function onKeydown(e: KeyboardEvent) {
-    if (listenToEscape && e.key === 'Escape') {
-      onOutside()
-    }
-  }
-
-  function start() {
-    events.forEach((ev) => document.addEventListener(ev, handler))
-    if (listenToEscape) document.addEventListener('keydown', onKeydown)
+    })
   }
 
   function stop() {
-    events.forEach((ev) => document.removeEventListener(ev, handler))
-    if (listenToEscape) document.removeEventListener('keydown', onKeydown)
+    stopClickOutside()
+    stopEscape?.()
   }
-
-  // auto-start
-  start()
 
   return { stop }
 }

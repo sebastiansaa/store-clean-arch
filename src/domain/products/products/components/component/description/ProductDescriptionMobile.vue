@@ -25,14 +25,14 @@
 <script setup lang="ts">
 import { useProductStore } from '../../../stores'
 import { cartStore } from '@/domain/cart/stores/cartStore'
-import { useMiniCart } from '@/domain/cart/composables'
-import { usePaymentNavigation } from '@/domain/payment/composables/usePaymentNavigation'
+import { useMiniCartStore } from '@/domain/cart/stores/useMiniCartStore'
+import { usePaymentNavigation } from '@/domain/cart-summary/composables/usePaymentNavigation'
 import BaseProductButton from '@/shared/components/ui/actions/buttons/BaseProductButton.vue'
 
 const productStore = useProductStore()
 const product = productStore.selectedProductDTO
 const cart = cartStore()
-const { openMini } = useMiniCart()
+const { openMini } = useMiniCartStore()
 const { setProductId, goToCheckout } = usePaymentNavigation()
 
 const handleAddToCart = () => {

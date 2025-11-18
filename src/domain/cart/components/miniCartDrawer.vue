@@ -1,6 +1,6 @@
 <template>
   <DrawerLateral
-    :modelValue="isOpen"
+    :modelValue="miniCart.isOpen"
     :width="drawerWidth"
     position="right"
     :offsetTop="56"
@@ -9,7 +9,7 @@
     <div class="mini-cart" role="dialog" aria-label="Mini carrito" @click="handlePanelClick">
       <header class="mini-cart__header">
         <h3>Tu carrito</h3>
-        <button class="mini-cart__close" @click="close">✕</button>
+        <button class="mini-cart__close" @click="miniCart.close">✕</button>
       </header>
 
       <div class="mini-cart__body" v-if="items.length > 0">
@@ -60,36 +60,37 @@ import { computed } from 'vue'
 import DrawerLateral from '@/shared/components/ui/display/DrawerLateral.vue'
 import BasePaymentButton from '@/shared/components/ui/actions/buttons/BasePaymentButton.vue'
 import { cartStore } from '@/domain/cart/stores/cartStore'
-import { useMiniCart } from '../composables'
-import { usePaymentNavigation } from '@/domain/payment/composables/usePaymentNavigation'
+import { useMiniCartStore } from '../stores/useMiniCartStore'
+import { usePaymentNavigation } from '@/domain/cart-summary/composables/usePaymentNavigation'
 import { useRouter } from 'vue-router'
+import { formatPrice } from '@/shared/helpers/formatPrice'
 
 const cart = cartStore()
-const { isOpen, isMini, expand, close } = useMiniCart()
+const miniCart = useMiniCartStore()
 const { goToCheckout } = usePaymentNavigation()
 const router = useRouter()
 
 const items = computed(() => cart.cartItems)
 const total = computed(() => cart.totalPrice)
-const drawerWidth = computed(() => (isMini.value ? '20vw' : '40vw'))
+const drawerWidth = computed(() => (miniCart.isMini ? '20vw' : '40vw'))
 
 function onUpdate(val: boolean) {
-  if (!val) close()
+  if (!val) miniCart.close()
 }
 
 function handlePanelClick() {
-  if (isMini.value) {
-    expand()
+  if (miniCart.isMini) {
+    miniCart.expand()
   }
 }
 
 function goToCart() {
-  close()
+  miniCart.close()
   router.push('/cart')
 }
 
 function openCheckout() {
-  close()
+  miniCart.close()
   goToCheckout()
 }
 
@@ -97,10 +98,7 @@ function remove(id: number) {
   cart.removeFromCart(id)
 }
 
-function formatPrice(p: any) {
-  const n = Number(p || 0)
-  return `${n} USD`
-}
+// formatPrice ahora proviene de shared/helpers/formatPrice
 </script>
 
 <style scoped>

@@ -1,19 +1,27 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 export const useSearchStore = defineStore('searchStore', () => {
-  const searchTerm = ref<string>('');
+  // Estado interno (privado)
+  const _searchTerm = ref<string>('');
 
+  // Getters (computed)
+  const searchTerm = computed(() => _searchTerm.value);
+
+  // Actions
   const setSearchTerm = (term: string) => {
-    searchTerm.value = term;
+    _searchTerm.value = term;
   }
 
   const clearSearch = () => {
-    searchTerm.value = '';
+    _searchTerm.value = '';
   }
+
   return {
-    searchTerm,// término de búsqueda actual
-    setSearchTerm,// actualiza el término de búsqueda
-    clearSearch,// restablece el término de búsqueda
+    // Getters (readonly computed)
+    searchTerm,
+    // Actions
+    setSearchTerm,
+    clearSearch,
   };
 });

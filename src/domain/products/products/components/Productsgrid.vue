@@ -1,7 +1,7 @@
 <template>
   <GridComponent class="product-grid">
     <Productscard
-      v-for="product in productsList"
+      v-for="product in productStore.productsList"
       :key="product.id"
       :productId="product.id"
       @select="navigateToProduct"
@@ -14,10 +14,8 @@ import GridComponent from '@/shared/components/layout/GridComponent.vue'
 import Productscard from './Productscard.vue'
 import { useProductNavigation } from '../composables'
 import { useProductStore } from '../stores/productStore'
-import { computed } from 'vue'
 
 const productStore = useProductStore()
-const productsList = computed(() => productStore.productsList)
 const { navigateToProduct } = useProductNavigation()
 </script>
 

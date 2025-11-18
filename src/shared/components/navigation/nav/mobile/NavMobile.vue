@@ -43,7 +43,7 @@ import { ShoppingCartIcon } from '@heroicons/vue/24/outline'
 import { LogoButton } from '@/shared/components/ui/actions/buttons'
 import { useNavigation } from '@/shared/composables/useNavigation'
 import { cartStore } from '@/domain/cart/stores/cartStore'
-import { useMiniCart } from '@/domain/cart/composables'
+import { useMiniCartStore } from '@/domain/cart/stores/useMiniCartStore'
 
 import NavMobileCat from './NavMobileCat.vue'
 import SearchBar from '@/domain/search/components/SearchBar.vue'
@@ -54,7 +54,7 @@ const { handleCategory, handleSection } = useNavigation()
 
 const cart = cartStore()
 const count = computed(() => cart.count)
-const { openExpanded } = useMiniCart()
+const { openExpanded } = useMiniCartStore()
 
 function handleSectionMobile(section: string) {
   handleSection(section)

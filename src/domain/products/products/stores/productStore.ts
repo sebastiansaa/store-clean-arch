@@ -1,33 +1,42 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import type { ProductInterface } from "../interfaces";
 
 export const useProductStore = defineStore('productStores', () => {
 
-  const productsList = ref<ProductInterface[]>([]);
-  const selectedProductDTO = ref<ProductInterface | null>(null);
-  const selectedProductId = ref<number | null>(null);
+  // Estado interno (privado)
+  const _productsList = ref<ProductInterface[]>([]);
+  const _selectedProductDTO = ref<ProductInterface | null>(null);
+  const _selectedProductId = ref<number | null>(null);
 
+  // Getters (computed)
+  const productsList = computed(() => _productsList.value);
+  const selectedProductDTO = computed(() => _selectedProductDTO.value);
+  const selectedProductId = computed(() => _selectedProductId.value);
+
+  // Actions
   const setProductsList = (products: ProductInterface[]) => {
-    productsList.value = products;
+    _productsList.value = products;
   };
 
   const selectProduct = (product: ProductInterface) => {
-    selectedProductId.value = product.id;
-    selectedProductDTO.value = product;
+    _selectedProductId.value = product.id;
+    _selectedProductDTO.value = product;
   };
 
   const selectProductById = (id: number) => {
-    selectedProductId.value = id;
-    selectedProductDTO.value = null;
+    _selectedProductId.value = id;
+    _selectedProductDTO.value = null;
   };
 
   return {
-    productsList, // lista global de productos para el grid
-    selectedProductDTO, // Producto seleccionado para la vista de detalle (Este es el DTO completo)
-    selectedProductId, // id producto seleccionado
-    setProductsList, // Actualiza la lista cuando cambia de categoría
-    selectProduct, //Guarda el producto seleccionado al navegar al detalle
+    // Getters (readonly computed)
+    productsList,
+    selectedProductDTO,
+    selectedProductId,
+    // Actions
+    setProductsList,
+    selectProduct,
     selectProductById,
   };
 });
