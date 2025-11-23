@@ -2,7 +2,6 @@
 
 import type { ProductInterface } from '../interfaces'
 import { useRouter } from 'vue-router'
-import { useProductsStore } from '../stores/productsStore'
 import { logger } from '@/shared/services/logger'
 
 export function useProductNavigation() {
@@ -27,9 +26,7 @@ export function useProductNavigation() {
     }
     try {
       logger.debug(`[useProductNavigation] navigateToProduct: ${product.id}`)
-      const store = useProductsStore()
-      store.selectProductById(product.id)
-      //Select explicita del product. Evita que quede "pegado" el anterior.
+      logger.debug(`[useProductNavigation] navigateToProduct: ${product.id}`)
 
       return await router.push({
         name: 'productDetail',
@@ -74,8 +71,7 @@ export function useProductNavigation() {
 
     try {
       logger.debug(`[useProductNavigation] navigateToCategory: ${categorySlug}`)
-      const store = useProductsStore()
-      store.resetSelection()
+      logger.debug(`[useProductNavigation] navigateToCategory: ${categorySlug}`)
 
       return await router.push({
         name: 'productsByCategory',

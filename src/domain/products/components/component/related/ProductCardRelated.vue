@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { ProductInterface } from '../../../interfaces'
+import type { ProductInterface } from '@/domain/products/interfaces'
 
 const props = defineProps<{ product: ProductInterface }>()
 const emit = defineEmits(['select'])

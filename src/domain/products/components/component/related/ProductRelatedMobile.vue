@@ -19,19 +19,20 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import ProductCardRelated from './ProductCardRelated.vue'
-import { useProductsStore } from '../../../stores/productsStore'
 import { useProductNavigation, useProducts } from '../../../composables'
+import type { ProductInterface } from '@/domain/products/interfaces'
+
+const props = defineProps<{
+  product: ProductInterface | null
+}>()
 
 const { navigateToProduct } = useProductNavigation()
 
-const store = useProductsStore()
-const product = store.selectedProductDTO
-
-const categoryId = product?.category?.id ?? 0
+const categoryId = computed(() => props.product?.category?.id ?? 0)
 const { data: relatedProducts } = useProducts(categoryId)
 
 const visibleProducts = computed(() =>
-  (relatedProducts.value || []).filter((p) => p.id !== product?.id),
+  (relatedProducts.value || []).filter((p) => p.id !== props.product?.id),
 )
 </script>
 

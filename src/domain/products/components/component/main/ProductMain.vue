@@ -1,7 +1,7 @@
 <template>
   <div class="product-main">
-    <ProductMainDesktop v-if="isReady && isDesktop" />
-    <ProductMainMobile v-else-if="isReady && !isDesktop" />
+    <ProductMainDesktop v-if="isReady && isDesktop" :product="product" />
+    <ProductMainMobile v-else-if="isReady && !isDesktop" :product="product" />
     <Skeleton v-else height="220px" />
   </div>
 </template>
@@ -12,6 +12,11 @@ import ProductMainDesktop from './ProductMainDesktop.vue'
 
 import { useBreakPoints } from '@/shared/composables'
 import { Skeleton } from '@/shared/components/layout'
+import type { ProductInterface } from '@/domain/products/interfaces'
+
+defineProps<{
+  product: ProductInterface | null
+}>()
 
 const { isDesktop, isReady } = useBreakPoints()
 </script>

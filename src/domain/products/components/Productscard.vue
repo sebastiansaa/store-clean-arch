@@ -15,20 +15,18 @@
 <script setup lang="ts">
 import { handleImageError, truncate } from '@/domain/products/helpers'
 import { computed, defineEmits, defineProps } from 'vue'
-import { useProductsStore } from '../stores/productsStore'
+import type { ProductInterface } from '@/domain/products/interfaces'
 
-const props = defineProps<{ productId: number }>()
-const store = useProductsStore()
-const product = computed(() => store.productsList.find((p) => p.id === props.productId))
+const props = defineProps<{ product: ProductInterface }>()
 
 const emit = defineEmits(['select'])
 
 function handleClick() {
-  if (product.value) emit('select', product.value)
+  if (props.product) emit('select', props.product)
 }
 
 const MAX_TITLE_LENGTH = 20
-const truncatedTitle = computed(() => truncate(product.value?.title ?? '', MAX_TITLE_LENGTH))
+const truncatedTitle = computed(() => truncate(props.product?.title ?? '', MAX_TITLE_LENGTH))
 </script>
 
 <style scoped>

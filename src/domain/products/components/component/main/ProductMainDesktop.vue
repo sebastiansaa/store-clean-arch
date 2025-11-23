@@ -1,13 +1,13 @@
 <template>
   <div class="product-main-desktop">
     <div class="gallery-section">
-      <ProductGallery />
+      <ProductGallery :images="product?.images || []" />
     </div>
     <div class="details-section">
-      <ProductDescriptionDesktop />
+      <ProductDescriptionDesktop :product="product" />
     </div>
     <div class="related-section">
-      <ProductRelated />
+      <ProductRelated :product="product" />
     </div>
   </div>
 </template>
@@ -16,6 +16,11 @@
 import ProductGallery from '../gallery/ProductGallery.vue'
 import ProductDescriptionDesktop from '../description/ProductDescriptionDesktop.vue'
 import ProductRelated from '../related/ProductRelated.vue'
+import type { ProductInterface } from '@/domain/products/interfaces'
+
+defineProps<{
+  product: ProductInterface | null
+}>()
 </script>
 
 <style scoped>

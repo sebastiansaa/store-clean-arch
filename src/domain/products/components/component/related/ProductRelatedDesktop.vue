@@ -33,14 +33,16 @@
 import { ref, computed } from 'vue'
 import ProductCardRelated from './ProductCardRelated.vue'
 import { BaseAccountButton } from '@/shared/components/ui/actions/buttons'
-import { useProductsStore } from '../../../stores/productsStore'
 import { useProductNavigation, useProducts } from '../../../composables'
+import type { ProductInterface } from '@/domain/products/interfaces'
+
+const props = defineProps<{
+  product: ProductInterface | null
+}>()
 
 const { navigateToProduct } = useProductNavigation()
-const store = useProductsStore()
-const product = store.selectedProductDTO
 
-const categoryId = product?.category?.id ?? 0
+const categoryId = computed(() => props.product?.category?.id ?? 0)
 const { data: relatedProducts } = useProducts(categoryId)
 
 const currentIndex = ref(0)
@@ -48,7 +50,7 @@ const visibleCount = 3 // tarjetas visibles en el carrusel
 
 // Filtra los productos para el carousel, se excluye el producto actual
 const visibleProducts = computed(() =>
-  (relatedProducts.value || []).filter((p) => p.id !== product?.id),
+  (relatedProducts.value || []).filter((p) => p.id !== props.product?.id),
 )
 
 // Funciones para navegar en el carrusel
