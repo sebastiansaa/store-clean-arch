@@ -35,31 +35,55 @@ defineProps({
 </script>
 
 <style scoped>
-/* reuse existing styles from view; keep minimal here as shared styles live in parent */
 .orders-list {
-  padding: 1.25rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  padding: 0.5rem 0;
+  box-sizing: border-box;
 }
+
 .success-message {
   display: flex;
   align-items: center;
   gap: 1rem;
   background: #f0f9f0;
   border: 1px solid #0a8a0a;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin: 0 1.25rem 1rem 1.25rem; /* Margin to align with cards if they have margin, or just padding */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
+
 .orders-container {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
 }
+
 .empty-state {
   text-align: center;
   padding: 3rem 1rem;
   background: #fff;
-  border-radius: 8px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin: 0 1.25rem;
+}
+
+h1 {
+  margin: 0 1.25rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+/* Tablet vertical: más espacio */
+@media (min-width: 600px) and (max-width: 1023px) {
+  .orders-list {
+    gap: 1.5rem;
+    padding: 1rem 0;
+  }
 }
 </style>

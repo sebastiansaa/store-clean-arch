@@ -8,20 +8,28 @@ import { ref } from 'vue'
 
 export const useNavStore = defineStore('nav', () => {
 
-  const selectedCategory = ref<number>(0)
-  const currentSection = ref<string>('')
+  const selectedCategory = ref<number | null>(null)
+  const currentSection = ref<string | null>(null)
   const isNavCatOpen = ref<boolean>(false)
 
-  const setCategory = (categoryId: number) => {
+  const setCategory = (categoryId: number | null) => {
     selectedCategory.value = categoryId
   }
 
-  const setCurrentSection = (section: string) => {
+  const setCurrentSection = (section: string | null) => {
     currentSection.value = section
   }
 
   const toggleNavCat = () => {
     isNavCatOpen.value = !isNavCatOpen.value
+  }
+
+  const openNavCat = () => {
+    isNavCatOpen.value = true
+  }
+
+  const closeNavCat = () => {
+    isNavCatOpen.value = false
   }
 
   return {
@@ -32,6 +40,8 @@ export const useNavStore = defineStore('nav', () => {
     setCategory,
     setCurrentSection,
     toggleNavCat,
+    openNavCat,
+    closeNavCat,
   }
 
 });

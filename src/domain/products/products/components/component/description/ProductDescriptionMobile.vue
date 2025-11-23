@@ -42,7 +42,12 @@ const handleAddToCart = () => {
 }
 function handleBuyNow() {
   if (!product) return
-  cart.addToCart(product)
+
+  const isAlreadyInCart = cart.cartItems.some((item) => item.product.id === product.id)
+  if (!isAlreadyInCart) {
+    cart.addToCart(product)
+  }
+
   setProductId(product.id)
   goToCheckout()
 }

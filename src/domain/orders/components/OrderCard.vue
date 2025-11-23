@@ -38,9 +38,14 @@ defineProps({
 
 <style scoped>
 .order-card {
-  padding: 1rem;
-  background: var(--card-bg, #fff);
-  border-radius: 8px;
+  padding: 1.25rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  /* Margin to simulate the spacing in mobile view if not handled by parent gap */
 }
 .order-header {
   display: flex;
