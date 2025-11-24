@@ -51,7 +51,6 @@ const emit = defineEmits(['confirm', 'cancel'])
 import { ref, watch } from 'vue'
 
 const {
-  payment,
   errorMessage,
   isProcessing,
   success,
@@ -61,6 +60,8 @@ const {
   handlePay,
   canPay,
 } = useCheckoutSidebar()
+
+console.error('Component setup handlePay:', handlePay)
 
 const errorRef = ref<HTMLElement | null>(null)
 

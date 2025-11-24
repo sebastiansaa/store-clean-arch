@@ -1,0 +1,166 @@
+﻿
+[1m[46m RUN [49m[22m [36mv4.0.13 [39m[90mC:/Users/sebsa/Desktop/curso/1 Front end/Vue/StoreNoAuth[39m
+
+ [31mÔØ»[39m src/domain/cart/stores/__tests__/cartStore.spec.ts [2m([22m[2m22 tests[22m[2m | [22m[31m4 failed[39m[2m)[22m[32m 95[2mms[22m[39m
+       [32mÔ£ô[39m debe inicializar con un carrito vac├¡o[32m 5[2mms[22m[39m
+       [32mÔ£ô[39m debe cargar items del storage al inicializar[32m 2[2mms[22m[39m
+       [32mÔ£ô[39m debe agregar un nuevo producto al carrito[32m 1[2mms[22m[39m
+       [32mÔ£ô[39m debe incrementar la cantidad si el producto ya existe en el carrito[32m 1[2mms[22m[39m
+       [32mÔ£ô[39m debe agregar m├║ltiples productos diferentes[32m 1[2mms[22m[39m
+[31m       [31m├ù[31m debe actualizar el total del carrito despu├®s de agregar productos[39m[32m 5[2mms[22m[39m
+       [32mÔ£ô[39m debe llamar a saveCartToStorage despu├®s de agregar un producto[32m 18[2mms[22m[39m
+       [32mÔ£ô[39m debe remover un producto del carrito por ID[32m 2[2mms[22m[39m
+       [32mÔ£ô[39m no debe hacer nada si el ID no existe[32m 1[2mms[22m[39m
+[31m       [31m├ù[31m debe actualizar el total despu├®s de remover un producto[39m[32m 1[2mms[22m[39m
+       [32mÔ£ô[39m debe llamar a saveCartToStorage despu├®s de remover[32m 11[2mms[22m[39m
+[31m       [31m├ù[31m debe actualizar la cantidad de un producto[39m[32m 1[2mms[22m[39m
+       [32mÔ£ô[39m debe remover el producto si la cantidad es 0[32m 1[2mms[22m[39m
+       [32mÔ£ô[39m debe prevenir cantidades negativas[32m 0[2mms[22m[39m
+       [32mÔ£ô[39m debe convertir cantidades decimales a enteros[32m 0[2mms[22m[39m
+       [32mÔ£ô[39m no debe hacer nada si el producto no existe[32m 0[2mms[22m[39m
+[31m       [31m├ù[31m debe vaciar completamente el carrito[39m[32m 1[2mms[22m[39m
+       [32mÔ£ô[39m debe llamar a saveCartToStorage con array vac├¡o[32m 11[2mms[22m[39m
+       [32mÔ£ô[39m count debe retornar la cantidad total de items[32m 1[2mms[22m[39m
+       [32mÔ£ô[39m totalPrice debe calcular correctamente el precio total[32m 0[2mms[22m[39m
+       [32mÔ£ô[39m cartItems debe retornar todos los items[32m 0[2mms[22m[39m
+       [32mÔ£ô[39m debe guardar autom├íticamente cuando cambia el carrito[32m 30[2mms[22m[39m
+node.exe : 
+En C:\Program Files\nodejs\npx.ps1: 29 Carácter: 3
++   & $NODE_EXE $NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], 
+    RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[31mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[39m[1m[41m Failed Tests 4 
+[49m[22m[31mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[39m
+
+[41m[1m FAIL [22m[49m 
+src/domain/cart/stores/__tests__/cartStore.spec.ts[2m > 
+[22mcartStore[2m > [22maddToCart[2m > [22mdebe 
+actualizar el total del carrito despu├®s de agregar 
+productos
+[31m[1mAssertionError[22m: expected +0 to be 50 // 
+Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 50[39m
+[31m+ 0[39m
+
+[36m [2mÔØ»[22m src/domain/cart/stores/__tests__/cartSt
+ore.spec.ts:[2m103:38[22m[39m
+    [90m101| [39m        it('debe actualizar el total 
+del carrito despu├®s de agregar prÔÇª
+    [90m102| [39m            
+store[33m.[39m[34maddToCart[39m(mockProduct1) [90m// 
+50[39m
+    [90m103| [39m            [34mexpect[39m(store[33m
+.[39mtotalPrice)[33m.[39m[34mtoBe[39m([34m50[39m)
+    [90m   | [39m                                     
+[31m^[39m
+    [90m104| [39m
+    [90m105| [39m            
+store[33m.[39m[34maddToCart[39m(mockProduct1) [90m// 
+50 x 2 = 100[39m
+
+[31m[2mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»Ô
+Ä»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/4]ÔÄ»[22m[39m
+
+[41m[1m FAIL [22m[49m 
+src/domain/cart/stores/__tests__/cartStore.spec.ts[2m > 
+[22mcartStore[2m > [22mremoveFromCart[2m > [22mdebe 
+actualizar el total despu├®s de remover un producto
+[31m[1mAssertionError[22m: expected 150 to be 100 // 
+Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 100[39m
+[31m+ 150[39m
+
+[36m [2mÔØ»[22m src/domain/cart/stores/__tests__/cartSt
+ore.spec.ts:[2m148:38[22m[39m
+    [90m146| [39m            
+store[33m.[39m[34mremoveFromCart[39m([34m1[39m) 
+[90m// Remover product1 (50)[39m
+    [90m147| [39m
+    [90m148| [39m            
+expect(store.totalPrice).toBe(totalBeforeRemove - 
+mockProdÔÇª
+    [90m   | [39m                                     
+[31m^[39m
+    [90m149| [39m        })
+    [90m150| [39m
+
+[31m[2mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»Ô
+Ä»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[2/4]ÔÄ»[22m[39m
+
+[41m[1m FAIL [22m[49m 
+src/domain/cart/stores/__tests__/cartStore.spec.ts[2m > 
+[22mcartStore[2m > [22mupdateQuantity[2m > [22mdebe 
+actualizar la cantidad de un producto
+[31m[1mAssertionError[22m: expected 50 to be 250 // 
+Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 250[39m
+[31m+ 50[39m
+
+[36m [2mÔØ»[22m src/domain/cart/stores/__tests__/cartSt
+ore.spec.ts:[2m170:38[22m[39m
+    [90m168| [39m
+    [90m169| [39m            [34mexpect[39m(store[33m
+.[39mcartItems[[34m0[39m][33m.[39mquantity)[33m.[39
+m[34mtoBe[39m([34m5[39m)
+    [90m170| [39m            [34mexpect[39m(store[33m
+.[39mtotalPrice)[33m.[39m[34mtoBe[39m(mockProduct1[3
+3m.[39mprice [33m*[39m [34m5[39m)
+    [90m   | [39m                                     
+[31m^[39m
+    [90m171| [39m        })
+    [90m172| [39m
+
+[31m[2mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»Ô
+Ä»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[3/4]ÔÄ»[22m[39m
+
+[41m[1m FAIL [22m[49m 
+src/domain/cart/stores/__tests__/cartStore.spec.ts[2m > 
+[22mcartStore[2m > [22mclearCart[2m > [22mdebe 
+vaciar completamente el carrito
+[31m[1mAssertionError[22m: expected 150 to be +0 // 
+Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 0[39m
+[31m+ 150[39m
+
+[36m [2mÔØ»[22m src/domain/cart/stores/__tests__/cartSt
+ore.spec.ts:[2m211:38[22m[39m
+    [90m209| [39m
+    [90m210| [39m            [34mexpect[39m(store[33m
+.[39mcartItems)[33m.[39m[34mtoEqual[39m([])
+    [90m211| [39m            [34mexpect[39m(store[33m
+.[39mtotalPrice)[33m.[39m[34mtoBe[39m([34m0[39m)
+    [90m   | [39m                                     
+[31m^[39m
+    [90m212| [39m            [34mexpect[39m(store[33m
+.[39mcount)[33m.[39m[34mtoBe[39m([34m0[39m)
+    [90m213| [39m        })
+
+[31m[2mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»Ô
+Ä»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[4/4]ÔÄ»[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m4 failed[39m[22m[2m | [22m[1m[32m18 passed[39m[22m[90m (22)[39m
+[2m   Start at [22m 22:49:57
+[2m   Duration [22m 1.27s[2m (transform 82ms, setup 0ms, collect 176ms, tests 95ms, environment 795ms, prepare 13ms)[22m
+
+

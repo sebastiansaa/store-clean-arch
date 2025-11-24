@@ -13,121 +13,148 @@ vi.mock('../../helpers/performCardPayment', () => ({
   }),
 }))
 
+vi.mock('../../helpers/cardTokenization', () => ({
+  autoTokenizeCard: vi.fn()
+}))
+
 import { performCardPayment } from '../../helpers/performCardPayment'
+import { autoTokenizeCard } from '../../helpers/cardTokenization'
+import type { CardFormRef } from '../../interfaces/types'
 
 describe('checkoutStore - handlePayment', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     vi.clearAllMocks()
+    // Configurar mock por defecto de autoTokenizeCard
+    vi.mocked(autoTokenizeCard).mockResolvedValue({ ok: true, payload: { token: 'default_tok', brand: 'visa' } })
   })
 
   it('tokeniza y llama a performCardPayment con la ref pasada', async () => {
     const store = useCheckoutStore()
 
-    // Preparar customer y método de pago
-    store.onCustomerConfirm({ name: 'Test', email: 'a@b.com' } as any)
-    store.onPaymentSelect({ method: 'card' } as any)
+    // Preparar customer y método de pago SIN details para que tokenize
+    store.onCustomerConfirm({ name: 'Test', email: 'a@b.com', address: '123 St', phone: '555-5555' })
+    store.onPaymentSelect({ method: 'card' })
 
-    // Mock CardFormRef con tokenizePayload
-    const mockCardForm: any = {
-      tokenizePayload: vi.fn(async () => ({ token: 'tok_123', brand: 'visa' })),
-    }
+    // Mock autoTokenizeCard success
+    vi.mocked(autoTokenizeCard).mockResolvedValue({ ok: true, payload: { token: 'tok_123', brand: 'visa' } })
 
-    const result = await store.handlePayment(1000, mockCardForm)
+    const mockCardForm = { tokenizePayload: vi.fn() }
+    const result = await store.handlePayment(1000, mockCardForm as unknown as CardFormRef)
 
     expect(result).toBeDefined()
     expect(result.ok).toBe(true)
     // El payment.details fue asignado a partir del token
-    expect((result as any).payload.payment.details).toEqual({ token: 'tok_123', brand: 'visa' })
+    if (result.ok) {
+      expect(result.payload.payment.details).toEqual({ token: 'tok_123', brand: 'visa' })
+    }
 
     // performCardPayment fue llamado
     expect(performCardPayment).toHaveBeenCalled()
-    const call = (performCardPayment as any).mock.calls[0][0]
+    const call = vi.mocked(performCardPayment).mock.calls[0][0]
     expect(call.cardForm).toBe(mockCardForm)
     expect(call.total).toBe(1000)
   })
 
   it('lanza si cardFormRef no tiene tokenizePayload', async () => {
     const store = useCheckoutStore()
-    store.onCustomerConfirm({ name: 'Test', email: 'a@b.com' } as any)
-    store.onPaymentSelect({ method: 'card' } as any)
+    store.onCustomerConfirm({ name: 'Test', email: 'a@b.com', address: '123 St', phone: '555-5555' })
+    store.onPaymentSelect({ method: 'card' })
 
-    const badForm: any = {}
+    const badForm = {}
 
-    const bad = await store.handlePayment(500, badForm)
+    const bad = await store.handlePayment(500, badForm as unknown as CardFormRef)
     expect(bad).toBeDefined()
     expect(bad.ok).toBe(false)
-    expect((bad as any).reason).toBe(CheckoutFailureReasons.INVALID_CARD_FORM)
+    if (!bad.ok) {
+      expect(bad.reason).toBe(CheckoutFailureReasons.INVALID_CARD_FORM)
+    }
   })
 
   it('maneja tokenización fallida (TokenizeReasons.FAILED)', async () => {
     const store = useCheckoutStore()
-    store.onCustomerConfirm({ name: 'Test', email: 'a@b.com' } as any)
-    store.onPaymentSelect({ method: 'card' } as any)
+    store.onCustomerConfirm({ name: 'Test', email: 'a@b.com', address: '123 St', phone: '555-5555' })
+    store.onPaymentSelect({ method: 'card' })
 
-    const mockCardForm: any = {
-      tokenizePayload: vi.fn(async () => ({ error: new Error('token error') })),
-    }
+    // Mock autoTokenizeCard failure
+    vi.mocked(autoTokenizeCard).mockResolvedValue({ ok: false, reason: 'FAILED', error: new Error('token error') })
 
-    const res = await store.handlePayment(200, mockCardForm)
+    const mockCardForm = { tokenizePayload: vi.fn() }
+    const res = await store.handlePayment(200, mockCardForm as unknown as CardFormRef)
     expect(res).toBeDefined()
     expect(res.ok).toBe(false)
-    expect((res as any).reason).toBe(CheckoutFailureReasons.TOKENIZATION_FAILED)
+    if (!res.ok) {
+      expect(res.reason).toBe(CheckoutFailureReasons.TOKENIZATION_FAILED)
+    }
   })
 
   it('maneja performCardPayment con success:false', async () => {
     const store = useCheckoutStore()
-    store.onCustomerConfirm({ name: 'Test', email: 'a@b.com' } as any)
-    store.onPaymentSelect({ method: 'card', details: { token: 'tok_123' } } as any)
+    store.onCustomerConfirm({ name: 'Test', email: 'a@b.com', address: '123 St', phone: '555-5555' })
+    store.onPaymentSelect({ method: 'card', details: { token: 'tok_123' } })
 
-      // Forzar performCardPayment a devolver failure
-      ; (performCardPayment as any).mockResolvedValueOnce({ success: false, paymentIntent: { status: 'requires_payment_method' } })
+    // Forzar performCardPayment a devolver failure
+    vi.mocked(performCardPayment).mockResolvedValueOnce({
+      success: false,
+      paymentIntent: { status: 'requires_payment_method', id: 'pi_fail', amount: 300, currency: 'eur', created: 123, client_secret: 'cs_123', capture_method: 'automatic', livemode: false, object: 'payment_intent', payment_method_types: ['card'] }
+    })
 
-    const mockCardForm: any = { tokenizePayload: vi.fn(async () => ({ token: 'tok_123' })) }
-    const res = await store.handlePayment(300, mockCardForm)
+    const mockCardForm = { tokenizePayload: vi.fn() }
+    const res = await store.handlePayment(300, mockCardForm as unknown as CardFormRef)
     expect(res).toBeDefined()
     expect(res.ok).toBe(false)
-    expect((res as any).reason).toBe(CheckoutFailureReasons.PAYMENT_INCOMPLETE)
+    if (!res.ok) {
+      expect(res.reason).toBe(CheckoutFailureReasons.PAYMENT_INCOMPLETE)
+    }
   })
 
   it('maneja paymentIntent no succeeded', async () => {
     const store = useCheckoutStore()
-    store.onCustomerConfirm({ name: 'Test', email: 'a@b.com' } as any)
-    store.onPaymentSelect({ method: 'card', details: { token: 'tok_123' } } as any)
+    store.onCustomerConfirm({ name: 'Test', email: 'a@b.com', address: '123 St', phone: '555-5555' })
+    store.onPaymentSelect({ method: 'card', details: { token: 'tok_123' } })
 
-      ; (performCardPayment as any).mockResolvedValueOnce({ success: true, paymentIntent: { status: 'requires_action' } })
+    vi.mocked(performCardPayment).mockResolvedValueOnce({
+      success: true,
+      paymentIntent: { status: 'requires_action', id: 'pi_action', amount: 400, currency: 'eur', created: 123, client_secret: 'cs_123', capture_method: 'automatic', livemode: false, object: 'payment_intent', payment_method_types: ['card'] }
+    })
 
-    const mockCardForm: any = { tokenizePayload: vi.fn(async () => ({ token: 'tok_123' })) }
-    const res = await store.handlePayment(400, mockCardForm)
+    const mockCardForm = { tokenizePayload: vi.fn() }
+    const res = await store.handlePayment(400, mockCardForm as unknown as CardFormRef)
     expect(res).toBeDefined()
     expect(res.ok).toBe(false)
-    expect((res as any).reason).toBe(CheckoutFailureReasons.PAYMENT_NOT_SUCCEEDED)
+    if (!res.ok) {
+      expect(res.reason).toBe(CheckoutFailureReasons.PAYMENT_NOT_SUCCEEDED)
+    }
   })
 
   it('devuelve not_ready si falta cliente', async () => {
     const store = useCheckoutStore()
     // No setActive customer
-    store.onPaymentSelect({ method: 'card' } as any)
+    store.onPaymentSelect({ method: 'card', details: {} })
 
-    const mockCardForm: any = { tokenizePayload: vi.fn(async () => ({ token: 'tok_123' })) }
-    const res = await store.handlePayment(500, mockCardForm)
+    const mockCardForm = { tokenizePayload: vi.fn() }
+    const res = await store.handlePayment(500, mockCardForm as unknown as CardFormRef)
     expect(res).toBeDefined()
     expect(res.ok).toBe(false)
-    expect((res as any).reason).toBe(CheckoutFailureReasons.NOT_READY)
+    if (!res.ok) {
+      expect(res.reason).toBe(CheckoutFailureReasons.NOT_READY)
+    }
   })
 
   it('devuelve exception si ocurre un error inesperado', async () => {
     const store = useCheckoutStore()
-    store.onCustomerConfirm({ name: 'Test', email: 'a@b.com' } as any)
-    store.onPaymentSelect({ method: 'card', details: { token: 'tok_123' } } as any)
+    store.onCustomerConfirm({ name: 'Test', email: 'a@b.com', address: '123 St', phone: '555-5555' })
+    store.onPaymentSelect({ method: 'card', details: { token: 'tok_123' } })
 
-      // Forzar error en performCardPayment
-      ; (performCardPayment as any).mockRejectedValueOnce(new Error('Unexpected crash'))
+    // Forzar error en performCardPayment
+    vi.mocked(performCardPayment).mockRejectedValueOnce(new Error('Unexpected crash'))
 
-    const mockCardForm: any = { tokenizePayload: vi.fn(async () => ({ token: 'tok_123' })) }
-    const res = await store.handlePayment(600, mockCardForm)
+    const mockCardForm = { tokenizePayload: vi.fn() }
+    const res = await store.handlePayment(600, mockCardForm as unknown as CardFormRef)
     expect(res).toBeDefined()
     expect(res.ok).toBe(false)
-    expect((res as any).reason).toBe(CheckoutFailureReasons.EXCEPTION)
+    if (!res.ok) {
+      expect(res.reason).toBe(CheckoutFailureReasons.EXCEPTION)
+    }
   })
 })

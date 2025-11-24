@@ -33,6 +33,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@pinia/testing": "^1.0.3",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/vue": "^8.1.0",
     "@tsconfig/node22": "^22.0.2",
@@ -45,6 +46,7 @@
     "eslint": "^9.37.0",
     "eslint-plugin-vue": "~10.5.0",
     "jiti": "^2.6.1",
+    "jsdom": "^27.2.0",
     "npm-run-all2": "^8.0.4",
     "prettier": "3.6.2",
     "typescript": "~5.9.0",

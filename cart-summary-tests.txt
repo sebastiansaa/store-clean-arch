@@ -1,0 +1,124 @@
+﻿
+> practicaeco@0.0.0 test
+> vitest src/domain/cart-summary
+
+
+[1m[44m DEV [49m[22m [34mv4.0.13 [39m[90mC:/Users/sebsa/Desktop/curso/1 Front end/Vue/StoreNoAuth[39m
+
+node.exe : [1m[33m[@vue/compiler-sfc][0m[33m 
+`defineProps` is a compiler macro and no longer needs to 
+be imported.[0m
+En C:\Program Files\nodejs\npm.ps1: 29 Carácter: 3
++   & $NODE_EXE $NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([1m[33m[@v 
+   ue/...e imported.[0m:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+ [32mÔ£ô[39m src/domain/cart-summary/composables/__tests__/usePaymentNavigation.spec.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32mÔ£ô[39m src/domain/cart-summary/components/__tests__/PaymentHeader.spec.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32mÔ£ô[39m src/domain/cart-summary/components/__tests__/PaymentActions.spec.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 89[2mms[22m[39m
+[90mstderr[2m | src/domain/cart-summary/components/__tes
+ts__/OrderSummary.spec.ts[2m > 
+[22m[2mOrderSummary.vue[2m > [22m[2mCasos edge[2m > 
+[22m[2mdebe manejar items undefined
+[22m[39m[Vue warn]: Invalid prop: type check failed for 
+prop "items". Expected Array, got Undefined  
+  at <OrderSummary items=undefined total=0 
+ref="VTU_COMPONENT" > 
+  at <VTUROOT>
+
+ [31mÔØ»[39m src/domain/cart-summary/components/__tests__/CartItemRow.spec.ts [2m([22m[2m9 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 72[2mms[22m[39m
+       [32mÔ£ô[39m debe renderizar correctamente[32m 30[2mms[22m[39m
+       [32mÔ£ô[39m debe mostrar el t├¡tulo del producto[32m 3[2mms[22m[39m
+       [32mÔ£ô[39m debe mostrar la cantidad del producto[32m 3[2mms[22m[39m
+       [32mÔ£ô[39m debe mostrar el precio formateado[32m 2[2mms[22m[39m
+       [32mÔ£ô[39m debe mostrar la imagen del producto[32m 11[2mms[22m[39m
+       [32mÔ£ô[39m debe renderizar el bot├│n de eliminar[32m 3[2mms[22m[39m
+       [32mÔ£ô[39m debe emitir evento remove con el productId al hacer click en eliminar[32m 5[2mms[22m[39m
+[31m       [31m├ù[31m debe manejar productos sin imagen[39m[32m 11[2mms[22m[39m
+       [32mÔ£ô[39m debe mostrar cantidad 1 correctamente[32m 3[2mms[22m[39m
+ [31mÔØ»[39m src/domain/cart-summary/components/__tests__/OrderSummary.spec.ts [2m([22m[2m10 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 88[2mms[22m[39m
+       [32mÔ£ô[39m debe renderizar correctamente[32m 35[2mms[22m[39m
+       [32mÔ£ô[39m debe mostrar el t├¡tulo "Resumen del pedido"[32m 11[2mms[22m[39m
+       [32mÔ£ô[39m debe mostrar mensaje de carrito vac├¡o cuando no hay items[32m 2[2mms[22m[39m
+       [32mÔ£ô[39m debe renderizar CartItemRow para cada item[32m 6[2mms[22m[39m
+       [32mÔ£ô[39m debe mostrar el total formateado[32m 4[2mms[22m[39m
+       [32mÔ£ô[39m debe emitir evento remove cuando CartItemRow emite remove[32m 6[2mms[22m[39m
+       [32mÔ£ô[39m debe manejar items undefined[32m 4[2mms[22m[39m
+       [32mÔ£ô[39m debe manejar total 0[32m 2[2mms[22m[39m
+       [32mÔ£ô[39m debe manejar un solo item[32m 4[2mms[22m[39m
+[31m       [31m├ù[31m debe renderizar correctamente con totales grandes[39m[32m 11[2mms[22m[39m
+
+[31mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[39m[1m[41m Failed Tests 2 
+[49m[22m[31mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[39m
+
+[41m[1m FAIL [22m[49m src/domain/cart-summary/componen
+ts/__tests__/CartItemRow.spec.ts[2m > 
+[22mCartItemRow.vue[2m > [22mCasos edge[2m > 
+[22mdebe manejar productos sin imagen
+[31m[1mAssertionError[22m: expected true to be false 
+// Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- false[39m
+[31m+ true[39m
+
+[36m [2mÔØ»[22m src/domain/cart-summary/components/__te
+sts__/CartItemRow.spec.ts:[2m113:34[22m[39m
+    [90m111| [39m
+    [90m112| [39m            [35mconst[39m img 
+[33m=[39m 
+wrapper[33m.[39m[34mfind[39m([32m'.thumb'[39m)
+    [90m113| [39m            [34mexpect[39m(img[33m.
+[39m[34mexists[39m())[33m.[39m[34mtoBe[39m([35mfals
+e[39m)
+    [90m   | [39m                                 
+[31m^[39m
+    [90m114| [39m        })
+    [90m115| [39m
+
+[31m[2mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»Ô
+Ä»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/2]ÔÄ»[22m[39m
+
+[41m[1m FAIL [22m[49m src/domain/cart-summary/componen
+ts/__tests__/OrderSummary.spec.ts[2m > 
+[22mOrderSummary.vue[2m > [22mCasos edge[2m > 
+[22mdebe renderizar correctamente con totales grandes
+[31m[1mAssertionError[22m: expected 'Resumen del 
+pedidoProducto 1x2$50.00 ÔÇª' to contain '999999.99'[39m
+
+Expected: [32m"999999.99"[39m
+Received: [31m"[7mResumen del pedidoProducto 1x2$50.00 
+├ù Producto 2x1$100.00 ├ù  Total: 
+$[27m999[7m,[27m999.99"[39m
+
+[36m [2mÔØ»[22m src/domain/cart-summary/components/__te
+sts__/OrderSummary.spec.ts:[2m172:36[22m[39m
+    [90m170| [39m            })
+    [90m171| [39m
+    [90m172| [39m            [34mexpect[39m(wrapper[3
+3m.[39m[34mtext[39m())[33m.[39m[34mtoContain[39m([
+32m'999999.99'[39m)
+    [90m   | [39m                                   
+[31m^[39m
+    [90m173| [39m        })
+    [90m174| [39m    })
+
+[31m[2mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»Ô
+Ä»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[2/2]ÔÄ»[22m[39m
+
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m3 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m64 passed[39m[22m[90m (66)[39m
+[2m   Start at [22m 23:28:04
+[2m   Duration [22m 1.93s[2m (transform 1.45s, setup 0ms, collect 2.61s, tests 293ms, environment 5.38s, prepare 83ms)[22m
+
+[1m[41m FAIL [49m[22m [31mTests failed. Watching for file changes...[39m
+       [2mpress [22m[1mh[22m[2m to show help[22m[2m, [22m[2mpress [22m[1mq[22m[2m to quit[22m
+[31mCancelling test run. Press CTRL+c again to exit forcefully.
+[39m
+
